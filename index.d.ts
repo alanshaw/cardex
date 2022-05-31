@@ -1,4 +1,5 @@
 import type { CID } from 'multiformats'
+import type { MultihashDigest } from 'multiformats/hashes/digest'
 
 export interface BlockIndexData {
   cid: CID
@@ -6,6 +7,7 @@ export interface BlockIndexData {
 }
 
 export interface IndexEntry {
+  multihash?: MultihashDigest
   digest: Uint8Array
   offset: number
 }

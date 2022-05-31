@@ -2,11 +2,9 @@ import { compare } from 'uint8arrays/compare'
 import { writeUint32LE, writeUint64LE, writeVarint } from './encoder.js'
 import { bytesReader, asyncIterableReader, readUint32LE, readUint64LE, readVarint } from './decoder.js'
 import * as IteratorChannel from './iterator-channel.js'
+import { IndexWriterOut } from './index-writer-common.js'
 
 /**
- * @typedef {import('multiformats').CID} CID
- * @typedef {import('./index.d').BytesReader} BytesReader
- * @typedef {import('./index.d').BytesWriter} BytesWriter
  * @typedef {import('./index.d').IndexReader} IndexReader
  * @typedef {import('./index.d').IndexWriter} IndexWriter
  * @typedef {import('./index.d').IndexEntry} IndexEntry
@@ -24,14 +22,14 @@ export const INDEX_SORTED_CODEC = 0x0400
  */
 export class IndexSortedWriter {
   /**
-   * @param {BytesWriter} writer
+   * @param {import('./index.d').BytesWriter} writer
    */
   constructor (writer) {
     /** @private */
     this._writer = writer
     /**
      * @private
-     * @type {Map<number, Array<{ digest: Uint8Array, offset: number }>>}
+     * @type {Map<number, IndexEntry[]>}
      */
     this._idxs = new Map()
   }
@@ -87,32 +85,11 @@ export class IndexSortedWriter {
 
 /**
  * @class
- * @implements {AsyncIterable<Uint8Array>}
- */
-export class IndexWriterOut {
-  /**
-   * @param {AsyncIterator<Uint8Array>} iterator
-   */
-  constructor (iterator) {
-    this._iterator = iterator
-  }
-
-  [Symbol.asyncIterator] () {
-    if (this._iterating) {
-      throw new Error('Multiple iterator not supported')
-    }
-    this._iterating = true
-    return this._iterator
-  }
-}
-
-/**
- * @class
  * @implements {IndexReader}
  */
 export class IndexSortedReader {
   /**
-   * @param {BytesReader} reader
+   * @param {import('./index.d').BytesReader} reader
    */
   constructor (reader) {
     /** @private */
