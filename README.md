@@ -2,6 +2,11 @@
 
 Indexes for CARs.
 
+Implementations of CARv2 indexes in JavaScript. Status:
+
+* [IndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0400-indexsorted) ⏳ (in progress)
+* [MultihashIndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0401-multihashindexsorted) ❌ (not implemented)
+
 ## Usage
 
 ### Create index
