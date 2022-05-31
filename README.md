@@ -43,3 +43,11 @@ for await (const { digest, offset } of reader.entries()) {
   console.log(`${Buffer.from(digest).toString('hex')} @ ${offset}`)
 }
 ```
+
+## Contributing
+
+Feel free to join in. All welcome. [Open an issue](https://github.com/alanshaw/cardex/issues)!
+
+## License
+
+Dual-licensed under [MIT + Apache 2.0](https://github.com/alanshaw/cardex/blob/main/LICENSE.md)
