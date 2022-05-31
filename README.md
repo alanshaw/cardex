@@ -1,5 +1,7 @@
 # cardex
 
+[![Build](https://github.com/alanshaw/cardex/actions/workflows/build.yml/badge.svg)](https://github.com/alanshaw/cardex/actions/workflows/build.yml)
+
 Indexes for CARs.
 
 Implementations of CARv2 indexes in JavaScript. Status:
