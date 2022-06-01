@@ -1,13 +1,15 @@
 # cardex
 
 [![Build](https://github.com/alanshaw/cardex/actions/workflows/build.yml/badge.svg)](https://github.com/alanshaw/cardex/actions/workflows/build.yml)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/cardex)](https://bundlephobia.com/package/cardex)
 
 Indexes for CARs.
 
 Implementations of CARv2 indexes in JavaScript. Status:
 
-* [IndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0400-indexsorted) ⏳ (in progress)
-* [MultihashIndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0401-multihashindexsorted) ⏳ (in progress)
+* [IndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0400-indexsorted) ✅ (complete & compatible)
+* [MultihashIndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0401-multihashindexsorted) ✅ (complete & compatible)
 
 ## Install
 
@@ -56,10 +58,22 @@ for await (const { digest, offset } of reader.entries()) {
 ## API
 
 * `class IndexSortedReader`
+    * `static fromIterable (iterable: AsyncIterable<Uint8Array>): IndexSortedReader`
+    * `static fromBytes (bytes: Uint8Array): IndexSortedReader`
+    * `entries (): AsyncIterable<{ digest: Uint8Array offset: number }>`
 * `class IndexSortedWriter`
-* `INDEX_SORTED_CODEC: number`
+    * `static create (): IndexSortedWriter`
+    * `put (blockIndexData: { cid: CID, offset: number }): Promise<void>`
+    * `close (): Promise<void>`
 * `class MultihashIndexSortedReader`
+    * `static fromIterable(iterable: AsyncIterable<Uint8Array>): MultihashIndexSortedReader`
+    * `static fromBytes(bytes: Uint8Array): MultihashIndexSortedReader`
+    * `entries(): AsyncIterable<{ multihash: MultihashDigest, digest: Uint8Array offset: number }>`
 * `class MultihashIndexSortedWriter`
+    * `static create (): MultihashIndexSortedWriter`
+    * `put (blockIndexData: { cid: CID, offset: number }): Promise<void>`
+    * `close (): Promise<void>`
+* `INDEX_SORTED_CODEC: number`
 * `MULTIHASH_INDEX_SORTED_CODEC: number`
 
 ## Releasing
