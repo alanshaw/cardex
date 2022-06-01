@@ -7,19 +7,12 @@ import { CarIndexer } from '@ipld/car/indexer'
 import { equals } from 'uint8arrays'
 import { Buffer } from 'buffer'
 import { IndexSortedReader, IndexSortedWriter, INDEX_SORTED_CODEC } from '../lib/index-sorted.js'
+import { collect } from './helpers/collect.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const carPath = path.join(__dirname, 'fixtures', 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464.car')
-
-const collect = async it => {
-  const chunks = []
-  for await (const chunk of it) {
-    chunks.push(chunk)
-  }
-  return chunks
-}
 
 test('creates an index', async t => {
+  const carPath = path.join(__dirname, 'fixtures', 'QmQRE4diFXfUjLfZREuzfMzWPJiQddaYBnoLjqUP1y7upn.car')
   const carStream = fs.createReadStream(carPath)
   const indexer = await CarIndexer.fromIterable(carStream)
   const { writer, out } = IndexSortedWriter.create()
@@ -38,6 +31,7 @@ test('creates an index', async t => {
 })
 
 test('reads an index', async t => {
+  const carPath = path.join(__dirname, 'fixtures', 'QmQRE4diFXfUjLfZREuzfMzWPJiQddaYBnoLjqUP1y7upn.car')
   const carStream = fs.createReadStream(carPath)
   const indexer = await CarIndexer.fromIterable(carStream)
   const { writer, out } = IndexSortedWriter.create()

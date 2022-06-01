@@ -7,20 +7,14 @@ import { CarIndexer } from '@ipld/car/indexer'
 import { equals } from 'uint8arrays'
 import { Buffer } from 'buffer'
 import { CID } from 'multiformats'
+import * as raw from 'multiformats/codecs/raw'
 import { MultihashIndexSortedReader, MultihashIndexSortedWriter, MULTIHASH_INDEX_SORTED_CODEC } from '../lib/mh-index-sorted.js'
+import { collect } from './helpers/collect.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const carPath = path.join(__dirname, 'fixtures', 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464.car')
-
-const collect = async it => {
-  const chunks = []
-  for await (const chunk of it) {
-    chunks.push(chunk)
-  }
-  return chunks
-}
 
 test('creates an index', async t => {
+  const carPath = path.join(__dirname, 'fixtures', 'QmQRE4diFXfUjLfZREuzfMzWPJiQddaYBnoLjqUP1y7upn.car')
   const carStream = fs.createReadStream(carPath)
   const indexer = await CarIndexer.fromIterable(carStream)
   const { writer, out } = MultihashIndexSortedWriter.create()
@@ -39,6 +33,7 @@ test('creates an index', async t => {
 })
 
 test('reads an index', async t => {
+  const carPath = path.join(__dirname, 'fixtures', 'QmQRE4diFXfUjLfZREuzfMzWPJiQddaYBnoLjqUP1y7upn.car')
   const carStream = fs.createReadStream(carPath)
   const indexer = await CarIndexer.fromIterable(carStream)
   const { writer, out } = MultihashIndexSortedWriter.create()
@@ -60,7 +55,7 @@ test('reads an index', async t => {
   for await (const { multihash, digest, offset } of reader.entries()) {
     const i = cids.findIndex(cid => equals(cid.multihash.digest, digest))
     t.true(i >= 0, `CID with digest ${digest} not found`)
-    console.log(`${CID.createV0(multihash)} @ ${offset}`)
+    console.log(`${CID.createV1(raw.code, multihash)} (aka ${cids[i]}) @ ${offset}`)
     cids.splice(i, 1)
   }
 

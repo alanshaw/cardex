@@ -11,12 +11,11 @@
   },
   "scripts": {
     "build": "npm run build:js && npm run build:types",
-    "build:js": "ipjs build --tests --main && npm run build:copy",
+    "build:js": "ipjs build --main && npm run build:copy",
     "build:copy": "cp -a tsconfig.json lib test *.ts dist/",
     "build:types": "npm run build:copy && cd dist && tsc --build",
-    "test": "npm run lint && npm run test:node && npm run test:cjs",
+    "test": "npm run lint && npm run test:node",
     "test:node": "ava --verbose 'test/*.spec.js'",
-    "test:cjs": "npm run build:js && ava --verbose dist/cjs/node-test/*.spec.js",
     "lint": "standard"
   },
   "keywords": [
