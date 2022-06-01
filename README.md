@@ -9,12 +9,19 @@ Implementations of CARv2 indexes in JavaScript. Status:
 * [IndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0400-indexsorted) ⏳ (in progress)
 * [MultihashIndexSorted](https://ipld.io/specs/transport/car/carv2/#format-0x0401-multihashindexsorted) ⏳ (in progress)
 
+## Install
+
+```
+npm install cardex
+```
+
 ## Usage
 
 ### Create index
 
 ```js
 import fs from 'fs'
+import { Readable } from 'stream'
 import { CarIndexer } from '@ipld/car/indexer'
 import { IndexSortedWriter } from 'cardex'
 
@@ -45,6 +52,19 @@ for await (const { digest, offset } of reader.entries()) {
   console.log(`${Buffer.from(digest).toString('hex')} @ ${offset}`)
 }
 ```
+
+## API
+
+* `class IndexSortedReader`
+* `class IndexSortedWriter`
+* `INDEX_SORTED_CODEC: number`
+* `class MultihashIndexSortedReader`
+* `class MultihashIndexSortedWriter`
+* `MULTIHASH_INDEX_SORTED_CODEC: number`
+
+## Releasing
+
+You can publish by either running `npm publish` in the `dist` directory or using `npx ipjs publish`.
 
 ## Contributing
 

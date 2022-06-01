@@ -6,7 +6,7 @@ import varint from 'varint'
 import { CarIndexer } from '@ipld/car/indexer'
 import { equals } from 'uint8arrays'
 import { Buffer } from 'buffer'
-import { IndexSortedReader, IndexSortedWriter, INDEX_SORTED_CODEC } from '../index-sorted.js'
+import { IndexSortedReader, IndexSortedWriter, INDEX_SORTED_CODEC } from '../lib/index-sorted.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const carPath = path.join(__dirname, 'fixtures', 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464.car')

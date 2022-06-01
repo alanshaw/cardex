@@ -7,7 +7,7 @@ import { CarIndexer } from '@ipld/car/indexer'
 import { equals } from 'uint8arrays'
 import { Buffer } from 'buffer'
 import { CID } from 'multiformats'
-import { MultihashIndexSortedReader, MultihashIndexSortedWriter, MULTIHASH_INDEX_SORTED_CODEC } from '../mh-index-sorted.js'
+import { MultihashIndexSortedReader, MultihashIndexSortedWriter, MULTIHASH_INDEX_SORTED_CODEC } from '../lib/mh-index-sorted.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const carPath = path.join(__dirname, 'fixtures', 'bafybeicpxveeln3sd4scqlacrunxhzmvslnbgxa72evmqg7r27emdek464.car')

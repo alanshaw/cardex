@@ -2,13 +2,21 @@
   "name": "cardex",
   "description": "Indexes for CARs.",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "./types/index.d.ts",
   "type": "module",
   "directories": {
+    "lib": "lib",
     "test": "test"
   },
   "scripts": {
-    "test": "ava",
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "ipjs build --tests --main && npm run build:copy",
+    "build:copy": "cp -a tsconfig.json lib test *.ts dist/",
+    "build:types": "npm run build:copy && cd dist && tsc --build",
+    "test": "npm run lint && npm run test:node && npm run test:cjs",
+    "test:node": "ava --verbose 'test/*.spec.js'",
+    "test:cjs": "npm run build:js && ava --verbose dist/cjs/node-test/*.spec.js",
     "lint": "standard"
   },
   "keywords": [
@@ -28,8 +36,51 @@
   },
   "devDependencies": {
     "@ipld/car": "^4.1.3",
+    "@types/varint": "^6.0.0",
     "ava": "^4.2.0",
     "buffer": "^6.0.3",
-    "standard": "^17.0.0"
-  }
+    "ipjs": "^5.2.0",
+    "standard": "^17.0.0",
+    "typescript": "^4.7.2"
+  },
+  "standard": {
+    "ignore": [
+      "dist"
+    ]
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./index-sorted": {
+      "import": "./lib/index-sorted.js"
+    },
+    "./multihash-index-sorted": {
+      "import": "./lib/mh-index-sorted.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "types/*"
+      ],
+      "index-sorted": [
+        "types/index-sorted.d.ts"
+      ],
+      "multihash-index-sorted": [
+        "types/mh-index-sorted.d.ts"
+      ],
+      "types/*": [
+        "types/*"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alanshaw/cardex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alanshaw/cardex/issues"
+  },
+  "homepage": "https://github.com/alanshaw/cardex#readme"
 }
