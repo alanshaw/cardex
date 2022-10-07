@@ -8,13 +8,6 @@
   "bin": {
     "cardex": "bin.js"
   },
-  "files": [
-    "lib",
-    "dist",
-    "bin.js",
-    "tsconfig.json",
-    "types.d.ts"
-  ],
   "directories": {
     "lib": "lib",
     "test": "test"
