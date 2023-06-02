@@ -48,7 +48,8 @@
   },
   "standard": {
     "ignore": [
-      "dist"
+      "dist",
+      "*.ts"
     ]
   },
   "exports": {
