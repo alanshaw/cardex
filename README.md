@@ -29,29 +29,32 @@ import { IndexSortedWriter } from 'cardex'
 
 const carStream = fs.createReadStream('my.car')
 const indexer = await CarIndexer.fromIterable(carStream)
-const { writer, out } = IndexSortedWriter.create()
 
-;(async () => {
-  for await (const blockIndexData of indexer) {
-    await writer.put(blockIndexData)
-  }
-  await writer.close()
-})()
+const { readable, writable } = new TransformStream()
+const writer = IndexSortedWriter.createWriter({ writer: writable.getWriter() })
 
-Readable.from(out).pipe(fs.createWriteStream('my.car.idx'))
+readable.pipeTo(Readable.toWeb(fs.createWriteStream('my.car.idx')))
+
+for await (const { cid, offset } of indexer) {
+  await writer.add(cid, offset)
+}
+await writer.close()
 ```
 
 ### Read index
 
 ```js
 import fs from 'fs'
+import { Readable } from 'stream'
 import { IndexSortedReader } from 'cardex'
 
 const carStream = fs.createReadStream('my.car.idx')
-const reader = IndexSortedReader.fromIterable(carStream)
+const reader = IndexSortedReader.createReader({ reader: Readable.toWeb(carStream).getReader() })
 
-for await (const { digest, offset } of reader.entries()) {
-  console.log(`${Buffer.from(digest).toString('hex')} @ ${offset}`)
+while (true) {
+  const { done, value } = reader.read()
+  if (done) break
+  console.log(`${Buffer.from(value.digest).toString('hex')} @ ${value.offset}`)
 }
 ```
 
@@ -75,10 +78,6 @@ for await (const { digest, offset } of reader.entries()) {
     * `close (): Promise<void>`
 * `INDEX_SORTED_CODEC: number`
 * `MULTIHASH_INDEX_SORTED_CODEC: number`
-
-## Releasing
-
-You can publish by either running `npm publish` in the `dist` directory or using `npx ipjs publish`.
 
 ## Contributing
 

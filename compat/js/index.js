@@ -1,7 +1,8 @@
+/* global TransformStream */
 import sade from 'sade'
-import { IndexSortedWriter, MultihashIndexSortedWriter, INDEX_SORTED_CODEC, MULTIHASH_INDEX_SORTED_CODEC } from 'cardex'
-import fs from 'fs'
-import { Readable } from 'stream'
+import { IndexSortedWriter, MultihashIndexSortedWriter } from 'cardex'
+import fs from 'node:fs'
+import { Writable } from 'node:stream'
 import { CarIndexer } from '@ipld/car/indexer'
 
 sade('cardex <path>')
@@ -13,18 +14,18 @@ sade('cardex <path>')
     const carStream = fs.createReadStream(carPath)
     const indexer = await CarIndexer.fromIterable(carStream)
     const idxFmt = opts.format === 'IndexSorted' ? opts.format : 'MultihashIndexSorted'
-    const idxCodec = opts.format === 'IndexSorted' ? INDEX_SORTED_CODEC : MULTIHASH_INDEX_SORTED_CODEC
-    const IndexWriter = idxCodec === INDEX_SORTED_CODEC ? IndexSortedWriter : MultihashIndexSortedWriter
-    const { writer, out } = IndexWriter.create()
+    const idxCodec = opts.format === 'IndexSorted' ? IndexSortedWriter.codec : MultihashIndexSortedWriter.codec
+    const IndexWriter = idxCodec === IndexSortedWriter.codec ? IndexSortedWriter : MultihashIndexSortedWriter
 
-    ;(async () => {
-      for await (const blockIndexData of indexer) {
-        await writer.put(blockIndexData)
-      }
-      await writer.close()
-    })()
+    const { readable, writable } = new TransformStream()
+    const writer = IndexWriter.createWriter({ writer: writable.getWriter() })
 
     console.log(`Generating index in ${idxFmt} (${idxCodec}) format...`)
-    Readable.from(out).pipe(fs.createWriteStream(outPath))
+    readable.pipeTo(Writable.toWeb(fs.createWriteStream(outPath)))
+
+    for await (const { cid, offset } of indexer) {
+      await writer.add(cid, offset)
+    }
+    await writer.close()
   })
   .parse(process.argv)

@@ -30,12 +30,12 @@
     "baseUrl": ".",
     "paths": {
       "cardex": [
-        "lib/"
+        "src"
       ]
     }
   },
   "include": [
-    "lib",
+    "src",
     "test"
   ],
   "exclude": [

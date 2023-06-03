@@ -1,3 +1,5 @@
+import { Await } from '../api'
+
 export interface Writable<T> {
   readonly locked: boolean
   getWriter(): Writer<T>
@@ -14,5 +16,3 @@ export interface Writer<T> {
 
   abort(reason: Error): Await<void>
 }
-
-export type Await<T> = T | PromiseLike<T>

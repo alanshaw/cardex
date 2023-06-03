@@ -1,7 +1,12 @@
-export const collect = async it => {
+/* global WritableStream */
+
+/** @param {ReadableStream} readable */
+export const collect = async readable => {
   const chunks = []
-  for await (const chunk of it) {
-    chunks.push(chunk)
-  }
+  await readable.pipeTo(new WritableStream({
+    write (chunk) {
+      chunks.push(chunk)
+    }
+  }))
   return chunks
 }

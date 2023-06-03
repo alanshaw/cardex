@@ -1,3 +1,5 @@
+import { Await } from '../api'
+
 export interface Readable<T> {
   getReader(): Reader<T>
 }
@@ -19,5 +21,3 @@ export interface Reader<T> {
   releaseLock(): void
   cancel(reason?: any): Await<void>
 }
-
-export type Await<T> = T | PromiseLike<T>

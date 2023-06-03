@@ -1,8 +1,13 @@
 import { Link, UnknownLink } from 'multiformats/link'
-import { Await, Writer } from './writer/api'
+import { Writer } from './writer/api'
 import { Reader, ReadResult } from './reader/api'
 
 export type CARLink = Link<Uint8Array, 0x0202>
+
+export type MultihashCodec = number
+export type DigestLength = number
+
+export type Await<T> = T | PromiseLike<T>
 
 export interface IndexItem {
   digest: Uint8Array
@@ -37,14 +42,4 @@ export interface IndexReader<S extends ReaderState = ReaderState, V extends Inde
   state: S
   read (): Await<ReadResult<V>>
   cancel (reason?: any): Await<void>
-}
-
-export interface IndexWriterFactory<S> {
-  codec: number
-  createWriter (config: { writer: Writer<Uint8Array> }): IndexWriter<S>
-}
-
-export interface IndexReaderFactory<S extends ReaderState = ReaderState, V extends IndexItem = IndexItem> {
-  codec: number
-  createReader (config: { reader: Reader<Uint8Array>, state?: S }): IndexReader<S, V>
 }

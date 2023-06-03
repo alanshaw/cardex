@@ -1,9 +1,8 @@
-// copied from https://github.com/ipld/js-car/blob/master/lib/decoder.js
 import varint from 'varint'
 import { create as createMultihash } from 'multiformats/hashes/digest'
 
 /**
- * @param {import('./reader/bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readVarint (reader) {
@@ -13,7 +12,7 @@ export async function readVarint (reader) {
 }
 
 /**
- * @param {import('./reader/bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function peekVarint (reader) {
@@ -23,7 +22,7 @@ export async function peekVarint (reader) {
 }
 
 /**
- * @param {import('./reader/bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readUint32LE (reader) {
@@ -35,7 +34,7 @@ export async function readUint32LE (reader) {
 }
 
 /**
- * @param {import('./reader/bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readUint64LE (reader) {
@@ -48,7 +47,7 @@ export async function readUint64LE (reader) {
 }
 
 /**
- * @param {import('./reader/bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader').BytesReader} reader
  * @returns {Promise<import('multiformats/hashes/digest').MultihashDigest>}
  */
 export async function readMultihash (reader) {
