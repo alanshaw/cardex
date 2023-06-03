@@ -88,7 +88,7 @@ import { MultiIndexWriter } from 'cardex/multi-index'
 const { readable, writable } = new TransformStream()
 const writer = MultiIndexWriter.createWriter({ writer: writable.getWriter() })
 
-readable.pipeTo(new Writable()) // destination
+readable.pipeTo(new WritableStream()) // destination
 
 writer.add(carCID0, async ({ writer }) => {
   const index0 = MultihashIndexSortedWriter.createWriter({ writer })
