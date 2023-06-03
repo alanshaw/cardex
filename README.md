@@ -86,8 +86,9 @@ import { MultihashIndexSortedWriter } from 'cardex'
 import { MultiIndexWriter } from 'cardex/multi-index'
 
 const { readable, writable } = new TransformStream()
+const writer = MultiIndexWriter.createWriter({ writer: writable.getWriter() })
 
-const writer = MultiIndexWriter.createWriter({ writable })
+readable.pipeTo(new Writable()) // destination
 
 writer.add(carCID0, async ({ writer }) => {
   const index0 = MultihashIndexSortedWriter.createWriter({ writer })
@@ -110,7 +111,8 @@ await writer.close()
 import { MultihashIndexSortedReader, IndexSortedReader } from 'cardex'
 import { MultiIndexReader } from 'cardex/multi-index'
 
-const reader = MultiIndexReader.createReader({ readable })
+const readable = new ReadableStream() // reader of a multi-index bytes
+const reader = MultiIndexReader.createReader({ reader: readable.getReader() })
 
 // add readers to the multi-index reader (to allow reading different index types)
 reader.add(MultihashIndexSortedReader)
