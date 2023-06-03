@@ -74,11 +74,20 @@
       "index-sorted": [
         "types/index-sorted/index.d.ts"
       ],
+      "index-sorted/api": [
+        "types/index-sorted/api.d.ts"
+      ],
       "multihash-index-sorted": [
         "types/mh-index-sorted/index.d.ts"
       ],
+      "multihash-index-sorted/api": [
+        "types/mh-index-sorted/api.d.ts"
+      ],
       "multi-index": [
         "types/multi-index/index.d.ts"
+      ],
+      "multi-index/api": [
+        "types/multi-index/api.d.ts"
       ],
       "types/*": [
         "types/*"
