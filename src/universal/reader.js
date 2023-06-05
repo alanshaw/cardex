@@ -7,8 +7,7 @@ import { MultiIndexReader } from '../multi-index/index.js'
 /** @type {Record<number, import('../multi-index/api').IndexReaderFactory>} */
 const indexReaders = {
   [IndexSortedReader.codec]: IndexSortedReader,
-  [MultihashIndexSortedReader.codec]: MultihashIndexSortedReader,
-  [MultiIndexReader.codec]: MultiIndexReader
+  [MultihashIndexSortedReader.codec]: MultihashIndexSortedReader
 }
 
 /** @returns {import('./api').UniversalReaderState} */
@@ -29,11 +28,17 @@ export const read = async ({ state, reader }) => {
   if (!state.reader) {
     const bytesReader = new BytesReader({ reader, state: state.bytesReader })
     const codec = await peekVarint(bytesReader)
-    const IndexReader = indexReaders[codec]
-    if (!IndexReader) {
-      throw new Error(`unsupported index: 0x${codec.toString(16)}`)
+    let indexReader
+    if (codec === MultiIndexReader.codec) {
+      indexReader = MultiIndexReader.createReader({ reader, state: { bytesReader: state.bytesReader } })
+      indexReader.add(IndexSortedReader)
+      indexReader.add(MultihashIndexSortedReader)
+    } else {
+      const IndexReader = indexReaders[codec]
+      if (!IndexReader) throw new Error(`unsupported index: 0x${codec.toString(16)}`)
+      indexReader = IndexReader.createReader({ reader, state: { bytesReader: state.bytesReader } })
     }
-    state.reader = IndexReader.createReader({ reader, state: { bytesReader: state.bytesReader } })
+    state.reader = indexReader
   }
   return state.reader.read()
 }
