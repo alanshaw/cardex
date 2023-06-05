@@ -6,23 +6,26 @@ import { readVarint, readUint32LE, readMultihash, peekVarint } from '../decoder.
 
 export const codec = MULTI_INDEX_CODEC
 
-/** @returns {import('./api').MultiIndexReaderState} */
-const init = () => ({
+/**
+ * @param {{ state?: import('../api').ReaderState }} config
+ * @returns {import('./api').MultiIndexReaderState}
+ */
+const init = config => ({
   started: false,
   carsCount: 0,
   carIndex: 0,
   car: null,
   index: null,
   done: false,
-  bytesReader: BytesReader.init(),
+  bytesReader: config.state?.bytesReader ?? BytesReader.init(),
   indexReaders: new Map([[MultihashIndexSortedReader.codec, MultihashIndexSortedReader]])
 })
 
 /**
- * @param {{ reader: import('../reader/api').Reader<Uint8Array> }} config
+ * @param {{ reader: import('../reader/api').Reader<Uint8Array>, state?: import('../api').ReaderState }} config
  */
-export const createReader = ({ reader }) =>
-  new MultiIndexReader({ reader, state: init() })
+export const createReader = ({ reader, state }) =>
+  new MultiIndexReader({ reader, state: init({ state }) })
 
 /**
  * @template {import('../api').ReaderState} S
