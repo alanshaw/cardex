@@ -127,6 +127,27 @@ while (true) {
 }
 ```
 
+### Universal reader
+
+The universal reader is for when you don't know what type of CARv2 index you're reading. The universal reader automatically instantiates the correct reader for a given index based on the codec:
+
+```js
+import fs from 'fs'
+import { Readable } from 'stream'
+import { UniversalReader } from 'cardex/universal'
+
+const carStream = fs.createReadStream('my.car.idx')
+const reader = UniversalReader.createReader({ reader: Readable.toWeb(carStream).getReader() })
+
+while (true) {
+  const { done, value } = reader.read()
+  if (done) break
+  console.log(`${Buffer.from(value.digest).toString('hex')} @ ${value.offset}`)
+  // Note: `value` might have `multihash` if reading from MultihashIndexSorted
+  // and it might have `origin` if reading from `MultiIndex`.
+}
+```
+
 ## Contributing
 
 Feel free to join in. All welcome. [Open an issue](https://github.com/alanshaw/cardex/issues)!
