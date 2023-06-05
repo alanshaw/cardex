@@ -64,6 +64,9 @@
     },
     "./multi-index": {
       "import": "./src/multi-index/index.js"
+    },
+    "./universal": {
+      "import": "./src/universal/index.js"
     }
   },
   "typesVersions": {
@@ -88,6 +91,12 @@
       ],
       "multi-index/api": [
         "types/multi-index/api.d.ts"
+      ],
+      "universal": [
+        "types/universal/index.d.ts"
+      ],
+      "universal/api": [
+        "types/universal/api.d.ts"
       ],
       "types/*": [
         "types/*"
