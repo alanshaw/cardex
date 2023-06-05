@@ -67,6 +67,12 @@
     },
     "./universal": {
       "import": "./src/universal/index.js"
+    },
+    "./decoder": {
+      "import": "./src/decoder.js"
+    },
+    "./encoder": {
+      "import": "./src/encoder.js"
     }
   },
   "typesVersions": {
