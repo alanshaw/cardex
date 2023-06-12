@@ -6,7 +6,9 @@ import { create as createMultihash } from 'multiformats/hashes/digest'
  * @returns {Promise<number>}
  */
 export async function readVarint (reader) {
-  const i = await peekVarint(reader)
+  const bytes = await reader.upTo(8)
+  if (!bytes.length) throw new Error('Unexpected end of data')
+  const i = varint.decode(bytes)
   reader.seek(varint.decode.bytes)
   return i
 }
