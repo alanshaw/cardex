@@ -1,5 +1,5 @@
 import { compare } from 'uint8arrays'
-import { encodeUint32LE, encodeVarint } from '../encoder.js'
+import { encodeVarint } from '../encoder.js'
 import { MULTI_INDEX_CODEC } from './codec.js'
 
 export const codec = MULTI_INDEX_CODEC
@@ -26,7 +26,7 @@ export const add = ({ state }, cid, builder) =>
  */
 export const close = async ({ state, writer }, options) => {
   await writer.write(encodeVarint(MULTI_INDEX_CODEC))
-  await writer.write(encodeUint32LE(state.builders.length))
+  await writer.write(encodeVarint(state.builders.length))
 
   state.builders.sort((a, b) => compare(a.cid.multihash.digest, b.cid.multihash.digest))
 

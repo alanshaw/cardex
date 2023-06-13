@@ -2,7 +2,7 @@ import { CID } from 'multiformats/cid'
 import * as MultihashIndexSortedReader from '../mh-index-sorted/reader.js'
 import { MULTI_INDEX_CODEC } from './codec.js'
 import { BytesReader } from '../bytes-reader.js'
-import { readVarint, readUint32LE, readMultihash, peekVarint } from '../decoder.js'
+import { peekVarint, readVarint, readMultihash } from '../decoder.js'
 
 export const codec = MULTI_INDEX_CODEC
 
@@ -53,7 +53,7 @@ export const read = async ({ state, reader }) => {
       throw new Error(`unexpected index codec: 0x${codec.toString(16)}`)
     }
     state.started = true
-    state.carsCount = await readUint32LE(bytesReader)
+    state.carsCount = await readVarint(bytesReader)
     state.carIndex = 0
     state.car = CID.createV1(0x0202, await readMultihash(bytesReader))
     const indexCodec = await peekVarint(bytesReader)

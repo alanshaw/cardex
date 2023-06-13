@@ -60,24 +60,7 @@ while (true) {
 
 ### Multi-index index
 
-The multi-index index is a custom index allowing multiple CAR indexes to be grouped together in a single index.
-
-The format looks like this:
-
-```
-| 0x0402 | count (uint32) | car-multihash | carv2-index | car-multihash | carv2-index | ... |
-```
-
-As with all CARv2 indexes, the index will be prefixed with a magic codec (currently using `0x0402` as a placeholder).
-
-Immediately following the codec:
-
-1. `count` - the number of CAR indexes contained in this multi index
-2. `car-multihash`- the multihash of the CAR file that contains the following blocks
-3. `carv2-index` - a CARv2 index (IndexSorted or MultihashIndexSorted including identifying codec - `0x0400`/`0x0401`)
-4. GOTO 2
-
-Indexes added to the multi-index are sorted by CAR multihash digest.
+The [multi-index index](https://github.com/web3-storage/specs/blob/c3288d4d500741ca6a72c71169c852ca498fad64/CARv2%20MultiIndex.md) is a custom index allowing multiple CAR indexes to be grouped together in a single index.
 
 #### Write multi-index
 
