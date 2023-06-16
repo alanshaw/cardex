@@ -46,7 +46,7 @@ export const read = async ({ state, reader }) => {
 /**
  * @template {{ state: import('./api').UniversalReaderState }} View
  * @param {View} view
- * @param {any} reason
+ * @param {any} [reason]
  */
 export const cancel = ({ state }, reason) => {
   if (!state.reader) return
@@ -66,7 +66,7 @@ class UniversalReader {
     return read(this)
   }
 
-  /** @param {any} reason */
+  /** @param {any} [reason] */
   cancel (reason) {
     return cancel(this, reason)
   }

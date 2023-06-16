@@ -89,7 +89,7 @@ export const read = async ({ reader, state }) => {
 /**
  * @template {{ state: import('./api').MultihashIndexSortedReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
  * @param {View} view
- * @param {any} reason
+ * @param {any} [reason]
  */
 export const cancel = ({ state, reader }, reason) => {
   state.done = true
@@ -107,7 +107,7 @@ class MultihashIndexSortedReader {
     return read(this)
   }
 
-  /** @param {any} reason */
+  /** @param {any} [reason] */
   cancel (reason) {
     return cancel(this, reason)
   }
