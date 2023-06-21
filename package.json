@@ -56,17 +56,35 @@
     ".": {
       "import": "./src/index.js"
     },
+    "./api": {
+      "import": "./src/api.js"
+    },
     "./index-sorted": {
       "import": "./src/index-sorted/index.js"
+    },
+    "./index-sorted/api": {
+      "import": "./src/index-sorted/api.js"
     },
     "./multihash-index-sorted": {
       "import": "./src/mh-index-sorted/index.js"
     },
+    "./multihash-index-sorted/api": {
+      "import": "./src/mh-index-sorted/api.js"
+    },
     "./multi-index": {
       "import": "./src/multi-index/index.js"
     },
-    "./universal": {
-      "import": "./src/universal/index.js"
+    "./multi-index/api": {
+      "import": "./src/multi-index/api.js"
+    },
+    "./reader/api": {
+      "import": "./src/reader/api.js"
+    },
+    "./universal/api": {
+      "import": "./src/universal/api.js"
+    },
+    "./writer/api": {
+      "import": "./src/writer/api.js"
     },
     "./decoder": {
       "import": "./src/decoder.js"
@@ -98,11 +116,17 @@
       "multi-index/api": [
         "types/multi-index/api.d.ts"
       ],
+      "reader/api": [
+        "types/reader/api.d.ts"
+      ],
       "universal": [
         "types/universal/index.d.ts"
       ],
       "universal/api": [
         "types/universal/api.d.ts"
+      ],
+      "writer/api": [
+        "types/writer/api.d.ts"
       ],
       "types/*": [
         "types/*"
