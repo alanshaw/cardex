@@ -52,7 +52,7 @@ const carStream = fs.createReadStream('my.car.idx')
 const reader = IndexSortedReader.createReader({ reader: Readable.toWeb(carStream).getReader() })
 
 while (true) {
-  const { done, value } = reader.read()
+  const { done, value } = await reader.read()
   if (done) break
   console.log(`${Buffer.from(value.digest).toString('hex')} @ ${value.offset}`)
 }
@@ -123,7 +123,7 @@ const carStream = fs.createReadStream('my.car.idx')
 const reader = UniversalReader.createReader({ reader: Readable.toWeb(carStream).getReader() })
 
 while (true) {
-  const { done, value } = reader.read()
+  const { done, value } = await reader.read()
   if (done) break
   console.log(`${Buffer.from(value.digest).toString('hex')} @ ${value.offset}`)
   // Note: `value` might have `multihash` if reading from MultihashIndexSorted
