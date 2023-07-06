@@ -69,6 +69,12 @@ prog
       }
       await writer.close()
     }
+
+    // if an output file was passed, print the CID of the generated index
+    if (opts.output) {
+      const bytes = await fs.promises.readFile(opts.output)
+      console.warn(CID.createV1(raw.code, await sha256.digest(bytes)).toString())
+    }
   })
 
 prog
