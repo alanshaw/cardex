@@ -80,6 +80,9 @@
     "./reader/api": {
       "import": "./src/reader/api.js"
     },
+    "./universal": {
+      "import": "./src/universal/index.js"
+    },
     "./universal/api": {
       "import": "./src/universal/api.js"
     },
