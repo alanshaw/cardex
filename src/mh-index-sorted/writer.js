@@ -5,22 +5,22 @@ import { MULTIHASH_INDEX_SORTED_CODEC } from './codec.js'
 export const codec = MULTIHASH_INDEX_SORTED_CODEC
 
 /**
- * @template {{ writer: import('../writer/api').Writer<Uint8Array> }} View
+ * @template {{ writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @returns {import('../api').IndexWriter<import('./api').MultihashIndexSortedWriterState>}
+ * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState>}
  */
 export const createWriter = ({ writer }) =>
   new MultihashIndexSortedWriter({ writer })
 
 /**
- * @template {{ state: import('./api').MultihashIndexSortedWriterState }} View
+ * @template {{ state: import('./api.js').MultihashIndexSortedWriterState }} View
  * @param {View} view
  * @param {import('multiformats').UnknownLink} cid
  * @param {number} offset
  */
 export const add = ({ state }, cid, offset) => {
   const { code, digest } = cid.multihash
-  /** @type {Map<number, import('../api').IndexItem[]>} */
+  /** @type {Map<number, import('../api.js').IndexItem[]>} */
   const idxs = state.mhIdxs.get(code) ?? new Map()
   const idx = idxs.get(digest.length) ?? []
   idx.push({ digest, offset })
@@ -29,9 +29,9 @@ export const add = ({ state }, cid, offset) => {
 }
 
 /**
- * @template {{ state: import('./api').MultihashIndexSortedWriterState, writer: import('../writer/api').Writer<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultihashIndexSortedWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @param {import('../api').CloseOptions} options
+ * @param {import('../api.js').CloseOptions} options
  */
 export const close = async ({ state, writer }, options) => {
   await writeVarint(writer, MULTIHASH_INDEX_SORTED_CODEC)
@@ -78,25 +78,25 @@ export const close = async ({ state, writer }, options) => {
 class MultihashIndexSortedWriter {
   /**
    * @param {object} config
-   * @param {import('../writer/api').Writer<Uint8Array>} config.writer
+   * @param {import('../writer/api.js').Writer<Uint8Array>} config.writer
    */
   constructor ({ writer }) {
     this.writer = writer
-    /** @type {import('./api').MultihashIndexSortedWriterState} */
+    /** @type {import('./api.js').MultihashIndexSortedWriterState} */
     this.state = { mhIdxs: new Map() }
   }
 
   /**
    * @param {import('multiformats').UnknownLink} cid
    * @param {number} offset
-   * @returns {import('../api').IndexWriter<import('./api').MultihashIndexSortedWriterState>}
+   * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState>}
    */
   add (cid, offset) {
     add(this, cid, offset)
     return this
   }
 
-  /** @param {import('../api').CloseOptions} options */
+  /** @param {import('../api.js').CloseOptions} options */
   close (options) {
     return close(this, options)
   }

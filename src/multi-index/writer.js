@@ -5,24 +5,24 @@ import { MULTI_INDEX_CODEC } from './codec.js'
 export const codec = MULTI_INDEX_CODEC
 
 /**
- * @param {{ writer: import('../writer/api').Writer<Uint8Array> }} config
+ * @param {{ writer: import('../writer/api.js').Writer<Uint8Array> }} config
  */
 export const createWriter = ({ writer }) =>
   new MultiIndexWriter({ writer })
 
 /**
- * @template {{ state: import('./api').MultiIndexWriterState }} View
+ * @template {{ state: import('./api.js').MultiIndexWriterState }} View
  * @param {View} view
- * @param {import('../api').CARLink} cid
- * @param {import('./api').WriterReceiver} builder
+ * @param {import('../api.js').CARLink} cid
+ * @param {import('./api.js').WriterReceiver} builder
  */
 export const add = ({ state }, cid, builder) =>
   state.builders.push({ cid, builder })
 
 /**
- * @template {{ state: import('./api').MultiIndexWriterState, writer: import('../writer/api').Writer<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultiIndexWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @param {import('../api').CloseOptions} [options]
+ * @param {import('../api.js').CloseOptions} [options]
  */
 export const close = async ({ state, writer }, options) => {
   await writer.write(encodeVarint(MULTI_INDEX_CODEC))
@@ -45,24 +45,24 @@ export const close = async ({ state, writer }, options) => {
 class MultiIndexWriter {
   /**
    * @param {object} config
-   * @param {import('../writer/api').Writer<Uint8Array>} config.writer
+   * @param {import('../writer/api.js').Writer<Uint8Array>} config.writer
    */
   constructor ({ writer }) {
     this.writer = writer
-    /** @type {import('./api').MultiIndexWriterState} */
+    /** @type {import('./api.js').MultiIndexWriterState} */
     this.state = { builders: [] }
   }
 
   /**
-   * @param {import('../api').CARLink} cid
-   * @param {import('./api').WriterReceiver} builder
+   * @param {import('../api.js').CARLink} cid
+   * @param {import('./api.js').WriterReceiver} builder
    */
   add = (cid, builder) => {
     add(this, cid, builder)
     return this
   }
 
-  /** @param {import('../api').CloseOptions} [options] */
+  /** @param {import('../api.js').CloseOptions} [options] */
   close (options) {
     return close(this, options)
   }
@@ -72,7 +72,7 @@ class MultiIndexWriter {
 class NonClosingWriter {
   #writer
 
-  /** @param {import('../writer/api').Writer<Uint8Array>} writer */
+  /** @param {import('../writer/api.js').Writer<Uint8Array>} writer */
   constructor (writer) {
     this.#writer = writer
   }

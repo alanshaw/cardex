@@ -1,6 +1,6 @@
-import { Await, CARLink, ReaderState, IndexReader, IndexItem } from '../api'
-import { Reader } from '../reader/api'
-import { Writer } from '../writer/api'
+import { Await, CARLink, ReaderState, IndexReader, IndexItem } from '../api.js'
+import { Reader } from '../reader/api.js'
+import { Writer } from '../writer/api.js'
 
 export interface MultiIndexReaderState extends ReaderState {
   started: boolean

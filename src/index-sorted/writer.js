@@ -5,15 +5,15 @@ import { INDEX_SORTED_CODEC } from './codec.js'
 export const codec = INDEX_SORTED_CODEC
 
 /**
- * @template {{ writer: import('../writer/api').Writer<Uint8Array> }} View
+ * @template {{ writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @returns {import('../api').IndexWriter<import('./api').IndexSortedWriterState>}
+ * @returns {import('../api.js').IndexWriter<import('./api.js').IndexSortedWriterState>}
  */
 export const createWriter = ({ writer }) =>
   new IndexSortedWriter({ writer })
 
 /**
- * @template {{ state: import('./api').IndexSortedWriterState }} View
+ * @template {{ state: import('./api.js').IndexSortedWriterState }} View
  * @param {View} view
  * @param {import('multiformats').UnknownLink} cid
  * @param {number} offset
@@ -26,9 +26,9 @@ export const add = ({ state }, cid, offset) => {
 }
 
 /**
- * @template {{ state: import('./api').IndexSortedWriterState, writer: import('../writer/api').Writer<Uint8Array> }} View
+ * @template {{ state: import('./api.js').IndexSortedWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @param {import('../api').CloseOptions} options
+ * @param {import('../api.js').CloseOptions} options
  */
 export const close = async ({ state, writer }, options) => {
   /** @type {Array<{ width: number, index: Uint8Array }>} */
@@ -68,25 +68,25 @@ export const close = async ({ state, writer }, options) => {
 class IndexSortedWriter {
   /**
    * @param {object} config
-   * @param {import('../writer/api').Writer<Uint8Array>} config.writer
+   * @param {import('../writer/api.js').Writer<Uint8Array>} config.writer
    */
   constructor ({ writer }) {
     this.writer = writer
-    /** @type {import('./api').IndexSortedWriterState} */
+    /** @type {import('./api.js').IndexSortedWriterState} */
     this.state = { idxs: new Map() }
   }
 
   /**
    * @param {import('multiformats').UnknownLink} cid
    * @param {number} offset
-   * @returns {import('../api').IndexWriter<import('./api').IndexSortedWriterState>}
+   * @returns {import('../api.js').IndexWriter<import('./api.js').IndexSortedWriterState>}
    */
   add (cid, offset) {
     add(this, cid, offset)
     return this
   }
 
-  /** @param {import('../api').CloseOptions} options */
+  /** @param {import('../api.js').CloseOptions} options */
   close (options) {
     return close(this, options)
   }

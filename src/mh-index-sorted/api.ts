@@ -1,5 +1,5 @@
 import { MultihashDigest } from 'multiformats'
-import { IndexItem, ReaderState, MultihashCodec, DigestLength } from '../api'
+import { IndexItem, ReaderState, MultihashCodec, DigestLength } from '../api.js'
 
 export interface MultihashIndexSortedReaderState extends ReaderState {
   started: boolean
