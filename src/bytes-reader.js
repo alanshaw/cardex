@@ -1,5 +1,5 @@
 /**
- * @param {{ reader: import('./reader/api').Reader<Uint8Array>, state: import('./api').BytesReaderState }} view
+ * @param {{ reader: import('./reader/api.js').Reader<Uint8Array>, state: import('./api.js').BytesReaderState }} view
  * @param {number} length
  */
 const read = async ({ reader, state }, length) => {
@@ -30,7 +30,7 @@ const read = async ({ reader, state }, length) => {
 
 export class BytesReader {
   /**
-   * @param {{ reader: import('./reader/api').Reader<Uint8Array>, state: import('./api').BytesReaderState }} config
+   * @param {{ reader: import('./reader/api.js').Reader<Uint8Array>, state: import('./api.js').BytesReaderState }} config
    */
   constructor ({ reader, state }) {
     this.reader = reader
@@ -66,7 +66,7 @@ export class BytesReader {
     return this.state.pos
   }
 
-  /** @returns {import('./api').BytesReaderState} */
+  /** @returns {import('./api.js').BytesReaderState} */
   static init () {
     return { pos: 0, have: 0, offset: 0, currentChunk: new Uint8Array(0) }
   }

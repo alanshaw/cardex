@@ -6,8 +6,8 @@ import { MULTIHASH_INDEX_SORTED_CODEC } from './codec.js'
 export const codec = MULTIHASH_INDEX_SORTED_CODEC
 
 /**
- * @param {{ state?: import('../api').ReaderState }} config
- * @returns {import('./api').MultihashIndexSortedReaderState}
+ * @param {{ state?: import('../api.js').ReaderState }} config
+ * @returns {import('./api.js').MultihashIndexSortedReaderState}
  */
 const init = config => {
   return {
@@ -26,16 +26,16 @@ const init = config => {
 }
 
 /**
- * @param {{ reader: import('../reader/api').Reader<Uint8Array>, state?: import('../api').ReaderState }} config
- * @returns {import('../api').IndexReader<import('./api').MultihashIndexSortedReaderState, import('./api').MultihashIndexItem>}
+ * @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state?: import('../api.js').ReaderState }} config
+ * @returns {import('../api.js').IndexReader<import('./api.js').MultihashIndexSortedReaderState, import('./api.js').MultihashIndexItem>}
  */
 export const createReader = ({ reader, state }) =>
   new MultihashIndexSortedReader({ reader, state: init({ state }) })
 
 /**
- * @template {{ state: import('./api').MultihashIndexSortedReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultihashIndexSortedReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
- * @returns {Promise<import('../reader/api').ReadResult<import('./api').MultihashIndexItem>>}
+ * @returns {Promise<import('../reader/api.js').ReadResult<import('./api.js').MultihashIndexItem>>}
  */
 export const read = async ({ reader, state }) => {
   if (state.done) return { done: true }
@@ -62,7 +62,7 @@ export const read = async ({ reader, state }) => {
   const digest = await bytesReader.exactly(state.width - 8)
   bytesReader.seek(state.width - 8)
   const offset = await readUint64LE(bytesReader)
-  const item = /** @type {import('./api').MultihashIndexItem} */({ multihash: createMultihash(state.code, digest), digest, offset })
+  const item = /** @type {import('./api.js').MultihashIndexItem} */({ multihash: createMultihash(state.code, digest), digest, offset })
 
   state.itemIndex++
   if (state.itemIndex >= state.itemsCount) {
@@ -87,7 +87,7 @@ export const read = async ({ reader, state }) => {
 }
 
 /**
- * @template {{ state: import('./api').MultihashIndexSortedReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultihashIndexSortedReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
  * @param {any} [reason]
  */
@@ -97,7 +97,7 @@ export const cancel = ({ state, reader }, reason) => {
 }
 
 class MultihashIndexSortedReader {
-  /** @param {{ reader: import('../reader/api').Reader<Uint8Array>, state: import('./api').MultihashIndexSortedReaderState }} config */
+  /** @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state: import('./api.js').MultihashIndexSortedReaderState }} config */
   constructor ({ reader, state }) {
     this.reader = reader
     this.state = state

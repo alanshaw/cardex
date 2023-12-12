@@ -1,6 +1,6 @@
 import { Link, UnknownLink } from 'multiformats/link'
-import { Writer } from './writer/api'
-import { Reader, ReadResult } from './reader/api'
+import { Writer } from './writer/api.js'
+import { Reader, ReadResult } from './reader/api.js'
 
 export type CARLink = Link<Uint8Array, 0x0202>
 

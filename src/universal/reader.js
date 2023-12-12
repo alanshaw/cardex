@@ -4,24 +4,24 @@ import { IndexSortedReader } from '../index-sorted/index.js'
 import { MultihashIndexSortedReader } from '../mh-index-sorted/index.js'
 import { MultiIndexReader } from '../multi-index/index.js'
 
-/** @type {Record<number, import('../multi-index/api').IndexReaderFactory>} */
+/** @type {Record<number, import('../multi-index/api.js').IndexReaderFactory>} */
 const indexReaders = {
   [IndexSortedReader.codec]: IndexSortedReader,
   [MultihashIndexSortedReader.codec]: MultihashIndexSortedReader
 }
 
-/** @returns {import('./api').UniversalReaderState} */
+/** @returns {import('./api.js').UniversalReaderState} */
 const init = () => ({ bytesReader: BytesReader.init() })
 
 /**
- * @param {{ reader: import('../reader/api').Reader<Uint8Array> }} config
- * @returns {import('../api').IndexReader<import('./api').UniversalReaderState, import('./api').UniversalIndexItem>}
+ * @param {{ reader: import('../reader/api.js').Reader<Uint8Array> }} config
+ * @returns {import('../api.js').IndexReader<import('./api.js').UniversalReaderState, import('./api.js').UniversalIndexItem>}
  */
 export const createReader = ({ reader }) =>
   new UniversalReader({ reader, state: init() })
 
 /**
- * @template {{ state: import('./api').UniversalReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
+ * @template {{ state: import('./api.js').UniversalReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
  */
 export const read = async ({ state, reader }) => {
@@ -40,11 +40,11 @@ export const read = async ({ state, reader }) => {
     }
     state.reader = indexReader
   }
-  return state.reader.read()
+  return state.reader?.read()
 }
 
 /**
- * @template {{ state: import('./api').UniversalReaderState }} View
+ * @template {{ state: import('./api.js').UniversalReaderState }} View
  * @param {View} view
  * @param {any} [reason]
  */
@@ -55,7 +55,7 @@ export const cancel = ({ state }, reason) => {
 
 class UniversalReader {
   /**
-   * @param {{ reader: import('../reader/api').Reader<Uint8Array>, state: import('./api').UniversalReaderState }} config
+   * @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state: import('./api.js').UniversalReaderState }} config
    */
   constructor ({ reader, state }) {
     this.reader = reader

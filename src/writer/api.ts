@@ -1,4 +1,4 @@
-import { Await } from '../api'
+import { Await } from '../api.js'
 
 export interface Writable<T> {
   readonly locked: boolean

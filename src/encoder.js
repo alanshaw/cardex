@@ -11,7 +11,7 @@ export function encodeUint32LE (num) {
 }
 
 /**
- * @param {import('./writer/api').Writer<Uint8Array>} writer
+ * @param {import('./writer/api.js').Writer<Uint8Array>} writer
  * @param {number} num
  */
 export function writeUint32LE (writer, num) {
@@ -19,7 +19,7 @@ export function writeUint32LE (writer, num) {
 }
 
 /**
- * @param {import('./writer/api').Writer<Uint8Array>} writer
+ * @param {import('./writer/api.js').Writer<Uint8Array>} writer
  * @param {number} num
  */
 export function writeUint64LE (writer, num) {
@@ -37,7 +37,7 @@ export function encodeVarint (num) {
 }
 
 /**
- * @param {import('./writer/api').Writer<Uint8Array>} writer
+ * @param {import('./writer/api.js').Writer<Uint8Array>} writer
  * @param {number} num
  */
 export function writeVarint (writer, num) {

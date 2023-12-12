@@ -1,4 +1,4 @@
-import { IndexItem, ReaderState, DigestLength } from '../api'
+import { IndexItem, ReaderState, DigestLength } from '../api.js'
 
 export interface IndexSortedReaderState extends ReaderState {
   started: boolean

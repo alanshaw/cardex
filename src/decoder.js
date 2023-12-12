@@ -2,7 +2,7 @@ import varint from 'varint'
 import { create as createMultihash } from 'multiformats/hashes/digest'
 
 /**
- * @param {import('./bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readVarint (reader) {
@@ -14,7 +14,7 @@ export async function readVarint (reader) {
 }
 
 /**
- * @param {import('./bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function peekVarint (reader) {
@@ -24,7 +24,7 @@ export async function peekVarint (reader) {
 }
 
 /**
- * @param {import('./bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readUint32LE (reader) {
@@ -36,7 +36,7 @@ export async function readUint32LE (reader) {
 }
 
 /**
- * @param {import('./bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<number>}
  */
 export async function readUint64LE (reader) {
@@ -49,7 +49,7 @@ export async function readUint64LE (reader) {
 }
 
 /**
- * @param {import('./bytes-reader').BytesReader} reader
+ * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<import('multiformats/hashes/digest').MultihashDigest>}
  */
 export async function readMultihash (reader) {

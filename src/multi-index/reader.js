@@ -7,8 +7,8 @@ import { peekVarint, readVarint, readMultihash } from '../decoder.js'
 export const codec = MULTI_INDEX_CODEC
 
 /**
- * @param {{ state?: import('../api').ReaderState }} config
- * @returns {import('./api').MultiIndexReaderState}
+ * @param {{ state?: import('../api.js').ReaderState }} config
+ * @returns {import('./api.js').MultiIndexReaderState}
  */
 const init = config => ({
   started: false,
@@ -22,26 +22,26 @@ const init = config => ({
 })
 
 /**
- * @param {{ reader: import('../reader/api').Reader<Uint8Array>, state?: import('../api').ReaderState }} config
+ * @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state?: import('../api.js').ReaderState }} config
  */
 export const createReader = ({ reader, state }) =>
   new MultiIndexReader({ reader, state: init({ state }) })
 
 /**
- * @template {import('../api').ReaderState} S
- * @template {import('../api').IndexItem} V
- * @template {{ state: import('./api').MultiIndexReaderState }} View
+ * @template {import('../api.js').ReaderState} S
+ * @template {import('../api.js').IndexItem} V
+ * @template {{ state: import('./api.js').MultiIndexReaderState }} View
  * @param {View} view
- * @param {import('./api').IndexReaderFactory<S, V>} factory
+ * @param {import('./api.js').IndexReaderFactory<S, V>} factory
  */
 export const add = ({ state }, factory) => {
   state.indexReaders.set(factory.codec, factory)
 }
 
 /**
- * @template {{ state: import('./api').MultiIndexReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultiIndexReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
- * @returns {Promise<import('../reader/api').ReadResult<import('./api').MultiIndexItem>>}
+ * @returns {Promise<import('../reader/api.js').ReadResult<import('./api.js').MultiIndexItem>>}
  */
 export const read = async ({ state, reader }) => {
   if (state.done) return { done: true }
@@ -84,7 +84,7 @@ export const read = async ({ state, reader }) => {
 }
 
 /**
- * @template {{ state: import('./api').MultiIndexReaderState, reader: import('../reader/api').Reader<Uint8Array> }} View
+ * @template {{ state: import('./api.js').MultiIndexReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
  * @param {any} [reason]
  */
@@ -95,7 +95,7 @@ export const cancel = ({ state, reader }, reason) => {
 
 class MultiIndexReader {
   /**
-   * @param {{ reader: import('../reader/api').Reader<Uint8Array>, state: import('./api').MultiIndexReaderState }} config
+   * @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state: import('./api.js').MultiIndexReaderState }} config
    */
   constructor ({ reader, state }) {
     this.reader = reader
@@ -104,9 +104,9 @@ class MultiIndexReader {
 
   /**
    * Add an index reader implementation.
-   * @template {import('../api').ReaderState} S
-   * @template {import('../api').IndexItem} V
-   * @param {import('./api').IndexReaderFactory<S, V>} factory
+   * @template {import('../api.js').ReaderState} S
+   * @template {import('../api.js').IndexItem} V
+   * @param {import('./api.js').IndexReaderFactory<S, V>} factory
    */
   add (factory) {
     add(this, factory)
