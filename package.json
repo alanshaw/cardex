@@ -14,9 +14,11 @@
   },
   "files": [
     "src",
-    "types"
+    "types",
+    "tsconfig.json"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc --build",
     "test": "npm run lint && npm run test:node",
     "test:node": "ava --verbose 'test/*.spec.js'",
@@ -54,50 +56,65 @@
   },
   "exports": {
     ".": {
-      "import": "./src/index.js"
+      "import": "./src/index.js",
+      "types": "./types/index.d.ts"
     },
     "./api": {
-      "import": "./src/api.js"
+      "import": "./src/api.js",
+      "types": "./types/api.d.ts"
     },
     "./index-sorted": {
-      "import": "./src/index-sorted/index.js"
+      "import": "./src/index-sorted/index.js",
+      "types": "./types/index-sorted/index.d.ts"
     },
     "./index-sorted/api": {
-      "import": "./src/index-sorted/api.js"
+      "import": "./src/index-sorted/api.js",
+      "types": "./types/index-sorted/api.d.ts"
     },
     "./multihash-index-sorted": {
-      "import": "./src/mh-index-sorted/index.js"
+      "import": "./src/mh-index-sorted/index.js",
+      "types": "./types/mh-index-sorted/index.d.ts"
     },
     "./multihash-index-sorted/api": {
-      "import": "./src/mh-index-sorted/api.js"
+      "import": "./src/mh-index-sorted/api.js",
+      "types": "./types/mh-index-sorted/api/index.d.ts"
     },
     "./multi-index": {
-      "import": "./src/multi-index/index.js"
+      "import": "./src/multi-index/index.js",
+      "types": "./types/multi-index/index.d.ts"
     },
     "./multi-index/api": {
-      "import": "./src/multi-index/api.js"
+      "import": "./src/multi-index/api.js",
+      "types": "./types/multi-index/api.d.ts"
     },
     "./reader/api": {
-      "import": "./src/reader/api.js"
+      "import": "./src/reader/api.js",
+      "types": "./types/reader/api.d.ts"
     },
     "./universal": {
-      "import": "./src/universal/index.js"
+      "import": "./src/universal/index.js",
+      "types": "./types/universal/index.d.ts"
     },
     "./universal/api": {
-      "import": "./src/universal/api.js"
+      "import": "./src/universal/api.js",
+      "types": "./types/universal/api.d.ts"
     },
     "./writer/api": {
-      "import": "./src/writer/api.js"
+      "import": "./src/writer/api.js",
+      "types": "./types/writer/api.d.ts"
     },
     "./decoder": {
-      "import": "./src/decoder.js"
+      "import": "./src/decoder.js",
+      "types": "./types/decoder.d.ts"
     },
     "./encoder": {
-      "import": "./src/encoder.js"
+      "import": "./src/encoder.js",
+      "types": "./types/encoder.d.ts"
     }
   },
   "typesVersions": {
     "*": {
+      ".": ["types/index.d.ts"],
       "*": [
         "types/*"
       ],
