@@ -50,7 +50,7 @@ export async function readUint64LE (reader) {
 
 /**
  * @param {import('./bytes-reader.js').BytesReader} reader
- * @returns {Promise<import('multiformats/hashes/digest').MultihashDigest>}
+ * @returns {Promise<import('multiformats/hashes/interface').MultihashDigest>}
  */
 export async function readMultihash (reader) {
   const codec = await readVarint(reader)
