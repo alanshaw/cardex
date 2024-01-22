@@ -17,10 +17,11 @@ import { MULTI_INDEX_CODEC } from './multi-index/codec.js'
 /** CAR CID code */
 const carCode = 0x0202
 
-const prog = sade('cardex')
+const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url)).toString())
+const prog = sade(pkg.name)
 
 prog
-  .version('1.0.0')
+  .version(pkg.version)
 
 prog
   .command('build <src>')
