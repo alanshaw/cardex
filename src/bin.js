@@ -73,7 +73,8 @@ prog
     // if an output file was passed, print the CID of the generated index
     if (opts.output) {
       const bytes = await fs.promises.readFile(opts.output)
-      console.warn(CID.createV1(raw.code, await sha256.digest(bytes)).toString())
+      const codec = srcs.length > 1 ? MultiIndexWriter.codec : Writer.codec
+      console.warn(CID.createV1(codec, await sha256.digest(bytes)).toString())
     }
   })
 
