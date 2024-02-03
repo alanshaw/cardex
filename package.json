@@ -42,6 +42,7 @@
     "varint": "^6.0.0"
   },
   "devDependencies": {
+    "@multiformats/blake2": "^2.0.2",
     "@types/node": "^20.2.5",
     "@types/varint": "^6.0.0",
     "ava": "^6.0.1",
@@ -62,6 +63,14 @@
     "./api": {
       "import": "./src/api.js",
       "types": "./types/api.d.ts"
+    },
+    "./cid-index-sorted": {
+      "import": "./src/cid-index-sorted/index.js",
+      "types": "./types/cid-index-sorted/index.d.ts"
+    },
+    "./cid-index-sorted/api": {
+      "import": "./src/cid-index-sorted/api.js",
+      "types": "./types/cid-index-sorted/api.d.ts"
     },
     "./index-sorted": {
       "import": "./src/index-sorted/index.js",
@@ -119,6 +128,12 @@
       ],
       "*": [
         "types/*"
+      ],
+      "cid-index-sorted": [
+        "types/cid-index-sorted/index.d.ts"
+      ],
+      "cid-index-sorted/api": [
+        "types/index-sorted/api.d.ts"
       ],
       "index-sorted": [
         "types/index-sorted/index.d.ts"

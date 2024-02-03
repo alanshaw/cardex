@@ -1,4 +1,9 @@
-import { IndexItem, ReaderState, DigestLength } from '../api.js'
+import { ReaderState, DigestLength } from '../api.js'
+
+export interface IndexItem {
+  digest: Uint8Array
+  offset: number
+}
 
 export interface IndexSortedReaderState extends ReaderState {
   started: boolean

@@ -62,7 +62,8 @@ export const read = async ({ reader, state }) => {
   const digest = await bytesReader.exactly(state.width - 8)
   bytesReader.seek(state.width - 8)
   const offset = await readUint64LE(bytesReader)
-  const item = /** @type {import('./api.js').MultihashIndexItem} */({ multihash: createMultihash(state.code, digest), digest, offset })
+  /** @type {import('./api.js').MultihashIndexItem} */
+  const item = { multihash: createMultihash(state.code, digest), offset }
 
   state.itemIndex++
   if (state.itemIndex >= state.itemsCount) {

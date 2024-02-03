@@ -22,7 +22,7 @@ test('creates an index', async t => {
 
   const closePromise = t.notThrowsAsync(async () => {
     for await (const { cid, offset } of indexer) {
-      await writer.add(cid, offset)
+      await writer.add({ multihash: cid.multihash, offset })
     }
     await writer.close()
   })
@@ -40,13 +40,13 @@ test('reads an index', async t => {
   const { readable, writable } = new TransformStream()
   const writer = MultihashIndexSortedWriter.createWriter({ writer: writable.getWriter() })
 
-  /** @type {import('multiformats').CID[]} */
+  /** @type {import('multiformats').UnknownLink[]} */
   const cids = []
 
   const closePromise = t.notThrowsAsync(async () => {
     for await (const { cid, offset } of indexer) {
       cids.push(cid)
-      await writer.add(cid, offset)
+      await writer.add({ multihash: cid.multihash, offset })
     }
     await writer.close()
   })
@@ -56,9 +56,9 @@ test('reads an index', async t => {
   while (true) {
     const { done, value } = await reader.read()
     if (done) break
-    const { multihash, digest, offset } = value
-    const i = cids.findIndex(cid => equals(cid.multihash.digest, digest))
-    t.true(i >= 0, `CID with digest ${digest} not found`)
+    const { multihash, offset } = value
+    const i = cids.findIndex(cid => equals(cid.multihash.digest, multihash.digest))
+    t.true(i >= 0, `CID with digest ${multihash.digest} not found`)
     console.log(`${CID.createV1(raw.code, multihash)} (aka ${cids[i]}) @ ${offset}`)
     cids.splice(i, 1)
   }

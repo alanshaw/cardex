@@ -7,7 +7,7 @@ export const codec = MULTIHASH_INDEX_SORTED_CODEC
 /**
  * @template {{ writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState>}
+ * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState, import('./api.js').MultihashIndexItem>}
  */
 export const createWriter = ({ writer }) =>
   new MultihashIndexSortedWriter({ writer })
@@ -15,15 +15,14 @@ export const createWriter = ({ writer }) =>
 /**
  * @template {{ state: import('./api.js').MultihashIndexSortedWriterState }} View
  * @param {View} view
- * @param {import('multiformats').UnknownLink} cid
- * @param {number} offset
+ * @param {import('./api.js').MultihashIndexItem} item
  */
-export const add = ({ state }, cid, offset) => {
-  const { code, digest } = cid.multihash
-  /** @type {Map<number, import('../api.js').IndexItem[]>} */
+export const add = ({ state }, item) => {
+  const { code, digest } = item.multihash
+  /** @type {Map<number, import('./api.js').MultihashIndexItem[]>} */
   const idxs = state.mhIdxs.get(code) ?? new Map()
   const idx = idxs.get(digest.length) ?? []
-  idx.push({ digest, offset })
+  idx.push(item)
   idxs.set(digest.length, idx)
   state.mhIdxs.set(code, idxs)
 }
@@ -47,11 +46,11 @@ export const close = async ({ state, writer }, options) => {
       const compact = new Uint8Array(recordedWidth * idx.length)
       const view = new DataView(compact.buffer)
       idx
-        .sort((a, b) => compare(a.digest, b.digest))
+        .sort((a, b) => compare(a.multihash.digest, b.multihash.digest))
         .forEach((item, i) => {
           const offset = i * recordedWidth
-          compact.set(item.digest, offset)
-          view.setBigUint64(offset + item.digest.length, BigInt(item.offset), true)
+          compact.set(item.multihash.digest, offset)
+          view.setBigUint64(offset + item.multihash.digest.length, BigInt(item.offset), true)
         })
 
       compactedIdxs.push({ width: recordedWidth, index: compact })
@@ -86,13 +85,9 @@ class MultihashIndexSortedWriter {
     this.state = { mhIdxs: new Map() }
   }
 
-  /**
-   * @param {import('multiformats').UnknownLink} cid
-   * @param {number} offset
-   * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState>}
-   */
-  add (cid, offset) {
-    add(this, cid, offset)
+  /** @param {import('./api.js').MultihashIndexItem} item */
+  add (item) {
+    add(this, item)
     return this
   }
 

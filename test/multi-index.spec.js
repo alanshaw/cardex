@@ -30,7 +30,7 @@ test('creates an index', async t => {
       const carStream = fs.createReadStream(carPath)
       const indexer = await CarIndexer.fromIterable(carStream)
       for await (const { cid, offset } of indexer) {
-        await indexWriter.add(cid, offset)
+        await indexWriter.add({ multihash: cid.multihash, offset })
       }
       await indexWriter.close()
     })
@@ -61,7 +61,7 @@ test('reads an index', async t => {
       const indexer = await CarIndexer.fromIterable(carStream)
       for await (const { cid, offset } of indexer) {
         blocks.push({ block: cid, origin: carCID })
-        await indexWriter.add(cid, offset)
+        await indexWriter.add({ multihash: cid.multihash, offset })
       }
       await indexWriter.close()
     })
@@ -74,9 +74,9 @@ test('reads an index', async t => {
     const { done, value } = await reader.read()
     if (done) break
     // @ts-expect-error
-    const { origin, multihash, digest, offset } = value
-    const i = blocks.findIndex(b => equals(b.block.multihash.digest, digest) && equals(b.origin.multihash.digest, origin.multihash.digest))
-    t.true(i >= 0, `CID with digest ${digest} not found`)
+    const { origin, multihash, offset } = value
+    const i = blocks.findIndex(b => equals(b.block.multihash.digest, multihash.digest) && equals(b.origin.multihash.digest, origin.multihash.digest))
+    t.true(i >= 0, `CID with digest ${multihash.digest} not found`)
     console.log(`${CID.createV1(raw.code, multihash)} (aka ${blocks[i].block}) @ ${offset}`)
     blocks.splice(i, 1)
   }
