@@ -42,14 +42,6 @@ export const add = ({ state }, item) => {
   mcidx.set(item.cid.multihash.digest.length, idx)
 }
 
-// format:
-// varint codec
-// uint8 number of versions
-//     uint8 version
-//     uint32 number of codecs
-//         uint64 IPLD codec
-//         uint32 number of mh indexes
-
 /**
  * @template {{ state: import('./api.js').CIDIndexSortedWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
