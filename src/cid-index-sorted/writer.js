@@ -51,7 +51,7 @@ export const close = async ({ state, writer }, options) => {
   await writeVarint(writer, codec)
   await writeUint8(writer, state.idxs.size)
 
-  const vidxs = Array.from(state.idxs.entries()).sort((a, b) => b[0] - a[0])
+  const vidxs = Array.from(state.idxs.entries()).sort((a, b) => a[0] - b[0])
   for (const [v, vidx] of vidxs) {
     await writeUint8(writer, v)
     await writeUint32LE(writer, vidx.size)
