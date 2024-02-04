@@ -54,7 +54,12 @@ prog
           const indexer = await CarIndexer.fromIterable(carStream)
           const indexWriter = Writer.createWriter({ writer })
           for await (const { cid, offset } of indexer) {
-            await indexWriter.add(cid, offset)
+            await indexWriter.add(
+              // @ts-expect-error
+              opts.format === 'IndexSorted'
+                ? { digest: cid.multihash.digest, offset }
+                : { multihash: cid.multihash, offset }
+            )
           }
           await indexWriter.close()
         })
@@ -66,7 +71,12 @@ prog
       const carStream = fs.createReadStream(srcs[0])
       const indexer = await CarIndexer.fromIterable(carStream)
       for await (const { cid, offset } of indexer) {
-        await writer.add(cid, offset)
+        await writer.add(
+          // @ts-expect-error
+          opts.format === 'IndexSorted'
+            ? { digest: cid.multihash.digest, offset }
+            : { multihash: cid.multihash, offset }
+        )
       }
       await writer.close()
     }

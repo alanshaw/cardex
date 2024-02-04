@@ -1,5 +1,5 @@
 import { MultihashDigest } from 'multiformats'
-import { IndexItem, ReaderState, MultihashCodec, DigestLength } from '../api.js'
+import { ReaderState, MultihashCodec, DigestLength } from '../api.js'
 
 export interface MultihashIndexSortedReaderState extends ReaderState {
   started: boolean
@@ -15,9 +15,10 @@ export interface MultihashIndexSortedReaderState extends ReaderState {
 }
 
 export interface MultihashIndexSortedWriterState {
-  mhIdxs: Map<MultihashCodec, Map<DigestLength, IndexItem[]>>
+  mhIdxs: Map<MultihashCodec, Map<DigestLength, MultihashIndexItem[]>>
 }
 
-export interface MultihashIndexItem extends IndexItem {
+export interface MultihashIndexItem {
   multihash: MultihashDigest
+  offset: number
 }

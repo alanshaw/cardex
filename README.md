@@ -36,7 +36,7 @@ const writer = IndexSortedWriter.createWriter({ writer: writable.getWriter() })
 readable.pipeTo(Readable.toWeb(fs.createWriteStream('my.car.idx')))
 
 for await (const { cid, offset } of indexer) {
-  await writer.add(cid, offset)
+  await writer.add({ digest: cid.multihash.digest, offset })
 }
 await writer.close()
 ```
@@ -75,13 +75,13 @@ readable.pipeTo(new WritableStream()) // destination
 
 writer.add(carCID0, async ({ writer }) => {
   const index0 = MultihashIndexSortedWriter.createWriter({ writer })
-  index0.add(cid, offset)
+  index0.add({ multihash: cid.multihash, offset })
   await index0.close()
 })
 
 writer.add(carCID1, async ({ writer }) => {
   const index1 = MultihashIndexSortedWriter.createWriter({ writer })
-  index1.add(cid, offset)
+  index1.add({ multihash: cid.multihash, offset })
   await index1.close()
 })
 

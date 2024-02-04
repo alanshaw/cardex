@@ -29,7 +29,7 @@ export const createReader = ({ reader, state }) =>
 
 /**
  * @template {import('../api.js').ReaderState} S
- * @template {import('../api.js').IndexItem} V
+ * @template {import('../api.js').Unit} V
  * @template {{ state: import('./api.js').MultiIndexReaderState }} View
  * @param {View} view
  * @param {import('./api.js').IndexReaderFactory<S, V>} factory
@@ -105,7 +105,7 @@ class MultiIndexReader {
   /**
    * Add an index reader implementation.
    * @template {import('../api.js').ReaderState} S
-   * @template {import('../api.js').IndexItem} V
+   * @template {import('../api.js').Unit} V
    * @param {import('./api.js').IndexReaderFactory<S, V>} factory
    */
   add (factory) {

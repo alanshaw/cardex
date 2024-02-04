@@ -1,4 +1,4 @@
-import { Await, CARLink, ReaderState, IndexReader, IndexItem } from '../api.js'
+import { Await, CARLink, ReaderState, IndexReader, Unit } from '../api.js'
 import { Reader } from '../reader/api.js'
 import { Writer } from '../writer/api.js'
 
@@ -7,9 +7,9 @@ export interface MultiIndexReaderState extends ReaderState {
   carsCount: number
   carIndex: number
   car: CARLink | null
-  index: IndexReader | null
+  index: IndexReader<ReaderState, Unit> | null
   done: boolean
-  indexReaders: Map<number, IndexReaderFactory>
+  indexReaders: Map<number, IndexReaderFactory<ReaderState, Unit>>
 }
 
 export interface WriterReceiver {
@@ -20,11 +20,11 @@ export interface MultiIndexWriterState {
   builders: Array<{ cid: CARLink, builder: WriterReceiver }>
 }
 
-export interface MultiIndexItem extends IndexItem {
+export interface MultiIndexItem {
   origin: CARLink
 }
 
-export interface IndexReaderFactory<S extends ReaderState = ReaderState, V extends IndexItem = IndexItem> {
+export interface IndexReaderFactory<S extends ReaderState, V extends Unit> {
   codec: number
   createReader (config: { reader: Reader<Uint8Array>, state?: S }): IndexReader<S, V>
 }

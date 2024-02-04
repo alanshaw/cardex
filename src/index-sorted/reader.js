@@ -23,7 +23,7 @@ const init = config => {
 
 /**
  * @param {{ reader: import('../reader/api.js').Reader<Uint8Array>, state?: import('../api.js').ReaderState }} config
- * @returns {import('../api.js').IndexReader<import('./api.js').IndexSortedReaderState, import('../api.js').IndexItem>}
+ * @returns {import('../api.js').IndexReader<import('./api.js').IndexSortedReaderState, import('./api.js').IndexItem>}
  */
 export const createReader = ({ reader, state }) =>
   new IndexSortedReader({ reader, state: init({ state }) })
@@ -31,7 +31,7 @@ export const createReader = ({ reader, state }) =>
 /**
  * @template {{ state: import('./api.js').IndexSortedReaderState, reader: import('../reader/api.js').Reader<Uint8Array> }} View
  * @param {View} view
- * @returns {Promise<import('../reader/api.js').ReadResult<import('../api.js').IndexItem>>}
+ * @returns {Promise<import('../reader/api.js').ReadResult<import('./api.js').IndexItem>>}
  */
 export const read = async ({ reader, state }) => {
   if (state.done) return { done: true }
@@ -55,7 +55,7 @@ export const read = async ({ reader, state }) => {
   const digest = await bytesReader.exactly(state.width - 8)
   bytesReader.seek(state.width - 8)
   const offset = await readUint64LE(bytesReader)
-  const item = /** @type {import('../api.js').IndexItem} */({ digest, offset })
+  const item = /** @type {import('./api.js').IndexItem} */({ digest, offset })
 
   state.itemIndex++
   if (state.itemIndex >= state.itemsCount) {

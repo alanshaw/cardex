@@ -20,7 +20,7 @@ test('creates an index', async t => {
 
   const closePromise = t.notThrowsAsync(async () => {
     for await (const { cid, offset } of indexer) {
-      await writer.add(cid, offset)
+      await writer.add({ digest: cid.multihash.digest, offset })
     }
     await writer.close()
   })
@@ -38,13 +38,13 @@ test('reads an index', async t => {
   const { readable, writable } = new TransformStream()
   const writer = IndexSortedWriter.createWriter({ writer: writable.getWriter() })
 
-  /** @type {import('multiformats').CID[]} */
+  /** @type {import('multiformats').UnknownLink[]} */
   const cids = []
 
   const closePromise = t.notThrowsAsync(async () => {
     for await (const { cid, offset } of indexer) {
       cids.push(cid)
-      await writer.add(cid, offset)
+      await writer.add({ digest: cid.multihash.digest, offset })
     }
     await writer.close()
   })

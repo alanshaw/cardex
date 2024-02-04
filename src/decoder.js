@@ -27,6 +27,18 @@ export async function peekVarint (reader) {
  * @param {import('./bytes-reader.js').BytesReader} reader
  * @returns {Promise<number>}
  */
+export async function readUint8 (reader) {
+  const arr = await reader.exactly(1)
+  const view = new DataView(arr.buffer, arr.byteOffset, arr.byteLength)
+  const n = view.getUint8(0)
+  reader.seek(1)
+  return n
+}
+
+/**
+ * @param {import('./bytes-reader.js').BytesReader} reader
+ * @returns {Promise<number>}
+ */
 export async function readUint32LE (reader) {
   const arr = await reader.exactly(4)
   const view = new DataView(arr.buffer, arr.byteOffset, arr.byteLength)
