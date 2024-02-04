@@ -4,7 +4,7 @@ import { IndexSortedReader } from '../index-sorted/index.js'
 import { MultihashIndexSortedReader } from '../mh-index-sorted/index.js'
 import { MultiIndexReader } from '../multi-index/index.js'
 
-/** @type {Record<number, import('../multi-index/api.js').IndexReaderFactory>} */
+/** @type {Record<number, import('../multi-index/api.js').IndexReaderFactory<any, any>>} */
 const indexReaders = {
   [IndexSortedReader.codec]: IndexSortedReader,
   [MultihashIndexSortedReader.codec]: MultihashIndexSortedReader
