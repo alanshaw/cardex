@@ -3,24 +3,6 @@ import varint from 'varint'
 /**
  * @param {number} num
  */
-export function encodeUint8 (num) {
-  const arr = new ArrayBuffer(1)
-  const view = new DataView(arr)
-  view.setUint8(0, num)
-  return new Uint8Array(arr)
-}
-
-/**
- * @param {import('./writer/api.js').Writer<Uint8Array>} writer
- * @param {number} num
- */
-export function writeUint8 (writer, num) {
-  return writer.write(encodeUint8(num))
-}
-
-/**
- * @param {number} num
- */
 export function encodeUint32LE (num) {
   const arr = new ArrayBuffer(4)
   const view = new DataView(arr)

@@ -12,4 +12,6 @@ uint32 number of multihash codecs
             (for each)
             digest
             uint64 offset
+            uint64 bytes offset
+            uint64 bytes length
 ```

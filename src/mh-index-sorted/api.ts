@@ -19,6 +19,8 @@ export interface MultihashIndexSortedWriterState {
 }
 
 export interface MultihashIndexItem {
+  /** Multihash of the block. */
   multihash: MultihashDigest
+  /** Offset to block from the beginning of the CAR. */
   offset: number
 }

@@ -25,7 +25,7 @@ prog
 prog
   .command('build <src>')
   .describe('Build an index for the passed src CAR file. Pass multiple sources to build a multi-index.')
-  .option('-f, --format', 'Index format (MultihashIndexSorted or IndexSorted)', 'MultihashIndexSorted')
+  .option('-f, --format', 'Index format (IndexSorted, MultihashIndexSorted or CIDIndexSorted)', 'MultihashIndexSorted')
   .option('-o, --output', 'Write output to this file.')
   .example('build my.car -o my.car.idx')
   .action(async (src, opts) => {
