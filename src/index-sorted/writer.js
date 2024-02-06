@@ -7,7 +7,7 @@ export const codec = INDEX_SORTED_CODEC
 /**
  * @template {{ writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @returns {import('../api.js').IndexWriter<import('./api.js').IndexSortedWriterState>}
+ * @returns {import('../api.js').IndexWriter<import('./api.js').IndexSortedWriterState, import('./api.js').IndexItem>}
  */
 export const createWriter = ({ writer }) =>
   new IndexSortedWriter({ writer })
@@ -15,13 +15,12 @@ export const createWriter = ({ writer }) =>
 /**
  * @template {{ state: import('./api.js').IndexSortedWriterState }} View
  * @param {View} view
- * @param {import('multiformats').UnknownLink} cid
- * @param {number} offset
+ * @param {import('./api.js').IndexItem} item
  */
-export const add = ({ state }, cid, offset) => {
-  const { digest } = cid.multihash
+export const add = ({ state }, item) => {
+  const { digest } = item
   const idx = state.idxs.get(digest.length) || []
-  idx.push({ digest, offset })
+  idx.push(item)
   state.idxs.set(digest.length, idx)
 }
 
@@ -76,13 +75,9 @@ class IndexSortedWriter {
     this.state = { idxs: new Map() }
   }
 
-  /**
-   * @param {import('multiformats').UnknownLink} cid
-   * @param {number} offset
-   * @returns {import('../api.js').IndexWriter<import('./api.js').IndexSortedWriterState>}
-   */
-  add (cid, offset) {
-    add(this, cid, offset)
+  /** @param {import('./api.js').IndexItem} item */
+  add (item) {
+    add(this, item)
     return this
   }
 

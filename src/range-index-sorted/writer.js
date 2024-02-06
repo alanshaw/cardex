@@ -1,25 +1,25 @@
 import { compare } from 'uint8arrays/compare'
 import { writeUint32LE, writeUint64LE, writeVarint } from '../encoder.js'
-import { MULTIHASH_INDEX_SORTED_CODEC } from './codec.js'
+import { RANGE_INDEX_SORTED_CODEC } from './codec.js'
 
-export const codec = MULTIHASH_INDEX_SORTED_CODEC
+export const codec = RANGE_INDEX_SORTED_CODEC
 
 /**
  * @template {{ writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
- * @returns {import('../api.js').IndexWriter<import('./api.js').MultihashIndexSortedWriterState, import('./api.js').MultihashIndexItem>}
+ * @returns {import('../api.js').IndexWriter<import('./api.js').RangeIndexSortedWriterState, import('./api.js').RangeIndexItem>}
  */
 export const createWriter = ({ writer }) =>
-  new MultihashIndexSortedWriter({ writer })
+  new RangeIndexSortedWriter({ writer })
 
 /**
- * @template {{ state: import('./api.js').MultihashIndexSortedWriterState }} View
+ * @template {{ state: import('./api.js').RangeIndexSortedWriterState }} View
  * @param {View} view
- * @param {import('./api.js').MultihashIndexItem} item
+ * @param {import('./api.js').RangeIndexItem} item
  */
 export const add = ({ state }, item) => {
   const { code, digest } = item.multihash
-  /** @type {Map<number, import('./api.js').MultihashIndexItem[]>} */
+  /** @type {Map<number, import('./api.js').RangeIndexItem[]>} */
   const idxs = state.mhIdxs.get(code) ?? new Map()
   const idx = idxs.get(digest.length) ?? []
   idx.push(item)
@@ -28,12 +28,12 @@ export const add = ({ state }, item) => {
 }
 
 /**
- * @template {{ state: import('./api.js').MultihashIndexSortedWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
+ * @template {{ state: import('./api.js').RangeIndexSortedWriterState, writer: import('../writer/api.js').Writer<Uint8Array> }} View
  * @param {View} view
  * @param {import('../api.js').CloseOptions} options
  */
 export const close = async ({ state, writer }, options) => {
-  await writeVarint(writer, MULTIHASH_INDEX_SORTED_CODEC)
+  await writeVarint(writer, RANGE_INDEX_SORTED_CODEC)
   await writeUint32LE(writer, state.mhIdxs.size)
 
   const mhIdxs = Array.from(state.mhIdxs.entries()).sort((a, b) => a[0] - b[0])
@@ -42,7 +42,7 @@ export const close = async ({ state, writer }, options) => {
     /** @type {Array<{ width: number, index: Uint8Array }>} */
     const compactedIdxs = []
     for (const [width, idx] of idxs.entries()) {
-      const recordedWidth = width + 8
+      const recordedWidth = width + 24
       const compact = new Uint8Array(recordedWidth * idx.length)
       const view = new DataView(compact.buffer)
       idx
@@ -51,6 +51,8 @@ export const close = async ({ state, writer }, options) => {
           const offset = i * recordedWidth
           compact.set(item.multihash.digest, offset)
           view.setBigUint64(offset + item.multihash.digest.length, BigInt(item.offset), true)
+          view.setBigUint64(offset + item.multihash.digest.length + 8, BigInt(item.bytesOffset), true)
+          view.setBigUint64(offset + item.multihash.digest.length + 16, BigInt(item.bytesLength), true)
         })
 
       compactedIdxs.push({ width: recordedWidth, index: compact })
@@ -74,18 +76,18 @@ export const close = async ({ state, writer }, options) => {
   }
 }
 
-class MultihashIndexSortedWriter {
+class RangeIndexSortedWriter {
   /**
    * @param {object} config
    * @param {import('../writer/api.js').Writer<Uint8Array>} config.writer
    */
   constructor ({ writer }) {
     this.writer = writer
-    /** @type {import('./api.js').MultihashIndexSortedWriterState} */
+    /** @type {import('./api.js').RangeIndexSortedWriterState} */
     this.state = { mhIdxs: new Map() }
   }
 
-  /** @param {import('./api.js').MultihashIndexItem} item */
+  /** @param {import('./api.js').RangeIndexItem} item */
   add (item) {
     add(this, item)
     return this

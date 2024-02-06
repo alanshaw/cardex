@@ -10,9 +10,11 @@ import { sha256 } from 'multiformats/hashes/sha2'
 import varint from 'varint'
 import { MultiIndexReader, MultiIndexWriter } from './multi-index/index.js'
 import { IndexSortedReader, IndexSortedWriter, MultihashIndexSortedReader, MultihashIndexSortedWriter } from './index.js'
+import { RangeIndexSortedReader, RangeIndexSortedWriter } from './range-index-sorted/index.js'
 import { MULTIHASH_INDEX_SORTED_CODEC } from './mh-index-sorted/codec.js'
 import { INDEX_SORTED_CODEC } from './index-sorted/codec.js'
 import { MULTI_INDEX_CODEC } from './multi-index/codec.js'
+import { RANGE_INDEX_SORTED_CODEC } from './range-index-sorted/codec.js'
 
 /** CAR CID code */
 const carCode = 0x0202
@@ -26,7 +28,7 @@ prog
 prog
   .command('build <src>')
   .describe('Build an index for the passed src CAR file. Pass multiple sources to build a multi-index.')
-  .option('-f, --format', 'Index format (MultihashIndexSorted or IndexSorted)', 'MultihashIndexSorted')
+  .option('-f, --format', 'Index format (IndexSorted, MultihashIndexSorted or RangeIndexSorted)', 'MultihashIndexSorted')
   .option('-o, --output', 'Write output to this file.')
   .example('build my.car -o my.car.idx')
   .action(async (src, opts) => {
@@ -35,7 +37,11 @@ prog
     const { readable, writable } = new TransformStream()
     readable.pipeTo(Writable.toWeb(opts.output ? fs.createWriteStream(opts.output) : process.stdout))
 
-    const Writer = opts.format === 'IndexSorted' ? IndexSortedWriter : MultihashIndexSortedWriter
+    const Writer = opts.format === 'IndexSorted'
+      ? IndexSortedWriter
+      : opts.format === 'RangeIndexSorted'
+        ? RangeIndexSortedWriter
+        : MultihashIndexSortedWriter
 
     if (srcs.length > 1) {
       const carCIDs = []
@@ -53,8 +59,15 @@ prog
           const carStream = fs.createReadStream(src)
           const indexer = await CarIndexer.fromIterable(carStream)
           const indexWriter = Writer.createWriter({ writer })
-          for await (const { cid, offset } of indexer) {
-            await indexWriter.add(cid, offset)
+          for await (const { cid, offset, blockOffset, blockLength } of indexer) {
+            await indexWriter.add(
+              // @ts-expect-error
+              opts.format === 'IndexSorted'
+                ? { digest: cid.multihash.digest, offset }
+                : opts.format === 'RangeIndexSorted'
+                  ? { multihash: cid.multihash, offset, bytesOffset: blockOffset, bytesLength: blockLength }
+                  : { multihash: cid.multihash, offset }
+            )
           }
           await indexWriter.close()
         })
@@ -65,8 +78,15 @@ prog
       const writer = Writer.createWriter({ writer: writable.getWriter() })
       const carStream = fs.createReadStream(srcs[0])
       const indexer = await CarIndexer.fromIterable(carStream)
-      for await (const { cid, offset } of indexer) {
-        await writer.add(cid, offset)
+      for await (const { cid, offset, blockOffset, blockLength } of indexer) {
+        await writer.add(
+          // @ts-expect-error
+          opts.format === 'IndexSorted'
+            ? { digest: cid.multihash.digest, offset }
+            : opts.format === 'RangeIndexSorted'
+              ? { multihash: cid.multihash, offset, bytesOffset: blockOffset, bytesLength: blockLength }
+              : { multihash: cid.multihash, offset }
+        )
       }
       await writer.close()
     }
@@ -97,6 +117,8 @@ prog
       reader = MultihashIndexSortedReader.createReader({ reader: readable.getReader() })
     } else if (codec === INDEX_SORTED_CODEC) {
       reader = IndexSortedReader.createReader({ reader: readable.getReader() })
+    } else if (codec === RANGE_INDEX_SORTED_CODEC) {
+      reader = RangeIndexSortedReader.createReader({ reader: readable.getReader() })
     } else if (codec === MULTI_INDEX_CODEC) {
       reader = MultiIndexReader.createReader({ reader: readable.getReader() })
       reader.add(MultihashIndexSortedReader)
@@ -113,13 +135,13 @@ prog
       if (done) break
       count++
       // @ts-expect-error
-      const { origin, multihash, digest, offset } = value
+      const { origin, multihash, digest, offset, bytesOffset, bytesLength } = value
       if (origin && origin.toString() !== lastOrigin) {
         lastOrigin = origin.toString()
         console.log(origin.toString())
       }
       if (multihash) {
-        console.log(`${origin ? '\t' : ''}${CID.createV1(raw.code, multihash)} @ ${offset}`)
+        console.log(`${origin ? '\t' : ''}${CID.createV1(raw.code, multihash)} @ ${offset}${bytesOffset ? ` (bytes ${bytesOffset} => ${bytesOffset + bytesLength})` : ''}`)
       } else {
         console.log(`${origin ? '\t' : ''}${Buffer.from(digest).toString('hex')} @ ${offset}`)
       }
