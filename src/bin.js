@@ -92,12 +92,8 @@ prog
 
     // if an output file was passed, print the CID of the generated index
     if (opts.output) {
-      const codec = opts.format === 'IndexSorted'
-        ? INDEX_SORTED_CODEC
-        : opts.format === 'RangeIndexSorted'
-          ? RANGE_INDEX_SORTED_CODEC
-          : MULTIHASH_INDEX_SORTED_CODEC
       const bytes = await fs.promises.readFile(opts.output)
+      const codec = srcs.length > 1 ? MultiIndexWriter.codec : Writer.codec
       console.warn(CID.createV1(codec, await sha256.digest(bytes)).toString())
     }
   })
